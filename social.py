@@ -1,15 +1,7 @@
-'''docstring for identifying social media accounts'''
+'''A class that identifies social media accounts'''
 
-from bs4 import BeautifulSoup
 import tldextract
-
-
-def getDomain(url):
-    return tldextract.extract(url).domain
-
-
-def hasSubdomain(url):
-    return tldextract.extract(url).subdomain
+from bs4 import BeautifulSoup
 
 
 class PageParse(object):
@@ -156,20 +148,23 @@ class PageParse(object):
         self.soup = BeautifulSoup(html, 'html5lib')
 
     def gethrefs(self):
+        '''Find all absolute URLs on the page and return them as a list'''
         hrefs = self.soup.find_all('a', href=True)
         data = [link['href'] for link in hrefs if 'http' in link['href']]
         return data
 
-    def getDomain(self):
-        return tldextract.extract(self.url).domain
-
-    def hasSubdomain(self):
-        return tldextract.extract(self.url).subdomain
+    def getDomain(self, href):
+        '''Extract the domain name of a URL'''
+        return tldextract.extract(href).domain
 
     def socialmedia(self):
+        '''String match unique fragments of known social media domains against
+        the URLs extracted from a webpage. Return matches as a dictionary of
+        key/value pairs where the key is the social media's domain name and
+        value is the matched URL'''
         hrefs = self.gethrefs()
         results = [href for s in self.socials for href in hrefs if s in href]
         data = {'url': self.url}
         for result in results:
-            data.update({getDomain(result): result})
+            data.update({self.getDomain(result): result})
         return data

@@ -14,7 +14,7 @@ class Crawler(object):
         return self.browser
 
     def getContent(self, url):
-        '''Go fetch and render the page to return the html'''
+        '''Fetch and render the page to return html'''
         self.browser.get(url)
         time.sleep(4)
         return self.browser.page_source
@@ -22,3 +22,4 @@ class Crawler(object):
     def exit(self):
         '''Be tidy and exit Firefox'''
         return self.browser.quit()
+
